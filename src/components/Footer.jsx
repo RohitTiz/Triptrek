@@ -1,10 +1,11 @@
+import { Link } from 'react-router-dom'
 import { Globe, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 
 const Footer = () => {
   const quickLinks = [
-    { label: 'Home', href: '#' },
-    { label: 'Destinations', href: '#destinations' },
-    { label: 'Packages', href: '#packages' },
+    { label: 'Home', href: '/' },
+    { label: 'Destinations', href: '/#destinations' },
+    { label: 'Packages', href: '/#packages' },
     { label: 'About Us', href: '#about' },
     { label: 'Contact', href: '#contact' },
     { label: 'Blog', href: '#blog' }
@@ -32,13 +33,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-6">
+            <Link to="/" className="flex items-center space-x-2 mb-6">
               <Globe className="h-8 w-8 text-blue-400" />
               <span className="text-2xl font-bold font-playfair">
                 Wanderlust
                 <span className="text-blue-400">.</span>
               </span>
-            </div>
+            </Link>
             <p className="text-gray-400 mb-6">
               Creating unforgettable travel experiences since 2015. We're passionate about helping you discover the world.
             </p>
@@ -64,12 +65,12 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <a 
-                    href={link.href}
+                  <Link 
+                    to={link.href}
                     className="text-gray-400 hover:text-white transition-colors duration-300"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

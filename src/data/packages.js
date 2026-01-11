@@ -5,7 +5,7 @@ export const packages = [
     description: 'Complete Kasol experience with treks, camping, and cultural immersion',
     price: 14999,
     duration: '5 Days / 4 Nights',
-    image: 'https://images.unsplash.com/photo-1593693399741-6e8ac64b8a3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1643042725188-42df82135f1b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     features: [
       'Riverside Camping',
       'Chalal & Kheerganga Trek',
@@ -38,7 +38,7 @@ export const packages = [
     description: 'Romantic getaway in the hills with luxury stay and private experiences',
     price: 25999,
     duration: '6 Days / 5 Nights',
-    image: 'https://images.unsplash.com/photo-1593693399741-6e8ac64b8a3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1712388430474-ace0c16051e2?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     features: [
       'Luxury Hotel Stay',
       'Private Solang Valley Visit',
@@ -66,7 +66,7 @@ export const packages = [
     description: 'Epic bike journey through high mountain passes and breathtaking landscapes',
     price: 44999,
     duration: '10 Days / 9 Nights',
-    image: 'https://images.unsplash.com/photo-1593693399741-6e8ac64b8a3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     features: [
       'Royal Enfield Bike',
       'Pangong Lake Camping',
@@ -94,7 +94,7 @@ export const packages = [
     description: 'Perfect winter trek with snow-covered trails and summit sunrise',
     price: 12999,
     duration: '6 Days / 5 Nights',
-    image: 'https://images.unsplash.com/photo-1593693399741-6e8ac64b8a3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     features: [
       'Snow Trekking',
       'Summit Sunrise',
