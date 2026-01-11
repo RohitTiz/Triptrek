@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
+import HomePage from './pages/HomePage'
 
 function App() {
-  return (
-    <div className='bg-gray-100'>App</div>
-  )
+  return <HomePage />
 }
 
 export default App
