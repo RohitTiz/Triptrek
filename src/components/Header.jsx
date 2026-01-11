@@ -65,12 +65,10 @@ const Header = () => {
             <Globe className={`h-8 w-8 transition-colors duration-300 ${
               isScrolled ? 'text-blue-600' : 'text-white'
             }`} />
-            <span className={`text-2xl font-bold font-playfair transition-colors duration-300 ${
-              isScrolled ? 'text-gray-900' : 'text-white'
-            }`}>
-              Wanderlust
-              <span className="text-blue-400">.</span>
-            </span>
+            <span className="text-2xl font-bold text-gray-900">
+  Wanderlust
+  <span className="text-blue-600">.</span>
+</span>
           </Link>
 
           {/* Desktop Navigation */}
