@@ -1,5 +1,7 @@
-@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* src/index.css */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 
 
@@ -11,6 +13,10 @@
   body {
     @apply font-inter;
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
 }
 
 @layer components {
@@ -19,11 +25,11 @@
   }
   
   .btn-secondary {
-    @apply border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300;
+    @apply border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors duration-300;
   }
   
   .section-title {
-    @apply text-4xl md:text-5xl font-playfair font-bold text-gray-800 mb-4;
+    @apply text-4xl md:text-5xl font-bold text-gray-800 mb-4;
   }
   
   .section-subtitle {
@@ -55,4 +61,22 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
