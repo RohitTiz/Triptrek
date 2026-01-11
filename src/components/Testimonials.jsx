@@ -1,34 +1,5 @@
 import { Star, Quote } from 'lucide-react'
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    role: 'Adventure Traveler',
-    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
-    content: 'The Bali package exceeded all expectations! Every detail was perfectly arranged.',
-    rating: 5,
-    trip: 'Bali Luxury Retreat'
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    role: 'Photography Enthusiast',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
-    content: 'Swiss Alps tour was breathtaking. The guides were knowledgeable and friendly.',
-    rating: 5,
-    trip: 'Swiss Adventure'
-  },
-  {
-    id: 3,
-    name: 'Emma Wilson',
-    role: 'Cultural Explorer',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
-    content: 'Kyoto cultural journey was transformative. Perfect blend of tradition and comfort.',
-    rating: 5,
-    trip: 'Japanese Heritage'
-  }
-]
+import { testimonials } from '../data/testimonials'
 
 const Testimonials = () => {
   return (
@@ -36,10 +7,10 @@ const Testimonials = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="section-title">
-            Traveler Stories
+            What Our Travelers Say
           </h2>
           <p className="section-subtitle">
-            Hear from our happy travelers about their unforgettable experiences
+            Real experiences from Indian travelers who explored with us
           </p>
         </div>
 
