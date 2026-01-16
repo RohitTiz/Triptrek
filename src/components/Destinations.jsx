@@ -1,4 +1,4 @@
-// Destinations.jsx
+// components/Destinations.jsx
 import { MapPin, ChevronRight } from 'lucide-react';
 import DestinationCard from './DestinationCard';
 import { destinations } from '../data/destinations';

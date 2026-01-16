@@ -1,10 +1,10 @@
-// PackageDetail.jsx (Refined version)
+// PackageDetail.jsx (FULLY FIXED VERSION)
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Check, Star, Clock, Users, Calendar, Shield, 
   AlertCircle, ArrowRight, Tag, Share2, Heart, 
-  MapPin, ChevronRight, ChevronLeft
+  MapPin, ChevronRight, ChevronLeft, CreditCard
 } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -36,11 +36,52 @@ const PackageDetail = () => {
     }).format(price);
   };
 
+  const handleProceedToPayment = () => {
+    // FIXED: Navigate to the correct route as per App.js
+    navigate(`/package/${pkg.id}/payment`, {
+      state: {
+        packageId: pkg.id,
+        packageName: pkg.name,
+        basePrice: pkg.price,
+        travelers,
+        selectedDate: selectedDate || new Date().toISOString().split('T')[0],
+        totalAmount: calculateTotalAmount(),
+        image: pkg.image,
+        type: 'package'
+      }
+    });
+  };
+
+  const calculateTotalAmount = () => {
+    let total = pkg.price * travelers;
+    if (appliedCoupon) {
+      total = total - (total * appliedCoupon.discount / 100);
+    }
+    return total * 1.18; // Adding 18% tax
+  };
+
+  const applyCoupon = () => {
+    if (couponCode === 'SUMMER15') {
+      setAppliedCoupon({
+        code: 'SUMMER15',
+        discount: 15
+      });
+    } else {
+      alert('Invalid coupon code');
+    }
+  };
+
   if (!pkg) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800">Package not found</h1>
+          <button 
+            onClick={() => navigate('/')}
+            className="mt-4 text-blue-600 hover:text-blue-700"
+          >
+            Go to Home
+          </button>
         </div>
       </div>
     );
@@ -243,16 +284,24 @@ const PackageDetail = () => {
                     placeholder="SUMMER15"
                     className="flex-1 rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                   />
-                  <button className="rounded-lg bg-gray-900 px-4 py-3 font-medium text-white hover:bg-gray-800">
+                  <button 
+                    onClick={applyCoupon}
+                    className="rounded-lg bg-gray-900 px-4 py-3 font-medium text-white hover:bg-gray-800"
+                  >
                     Apply
                   </button>
                 </div>
+                {appliedCoupon && (
+                  <div className="mt-2 text-sm text-emerald-600">
+                    {appliedCoupon.discount}% discount applied!
+                  </div>
+                )}
               </div>
 
               {/* Price Summary */}
               <div className="mb-6 space-y-3">
                 <div className="flex justify-between text-gray-600">
-                  <span>Base Price</span>
+                  <span>Base Price ({travelers} persons)</span>
                   <span>{formatPrice(pkg.price * travelers)}</span>
                 </div>
                 {appliedCoupon && (
@@ -262,19 +311,23 @@ const PackageDetail = () => {
                   </div>
                 )}
                 <div className="flex justify-between text-gray-600">
-                  <span>Taxes & Fees</span>
-                  <span>{formatPrice(pkg.price * travelers * 0.18)}</span>
+                  <span>Taxes & Fees (18%)</span>
+                  <span>{formatPrice((pkg.price * travelers * (appliedCoupon ? (100-appliedCoupon.discount)/100 : 1)) * 0.18)}</span>
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total Amount</span>
-                    <span>{formatPrice(pkg.price * travelers * 1.18)}</span>
+                    <span>{formatPrice(calculateTotalAmount())}</span>
                   </div>
                 </div>
               </div>
 
-              <button className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 py-4 font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg">
-                Book Now
+              <button 
+                onClick={handleProceedToPayment}
+                className="flex w-full items-center justify-center space-x-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 py-4 font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg"
+              >
+                <CreditCard className="h-5 w-5" />
+                <span>Proceed to Payment</span>
               </button>
 
               <div className="mt-4 text-center text-sm text-gray-500">

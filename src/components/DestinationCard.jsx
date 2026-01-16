@@ -1,4 +1,4 @@
-// DestinationCard.jsx
+// components/DestinationCard.jsx
 import { MapPin, Calendar, Star, Users, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

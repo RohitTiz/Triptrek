@@ -11,6 +11,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/destinations" element={<HomePage />} />
         <Route path="/destination/:id" element={<DestinationDetail />} />
         <Route path="/package/:id" element={<PackageDetail />} />
         <Route path="/package/:id/payment" element={<Payment />} />

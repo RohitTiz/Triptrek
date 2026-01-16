@@ -1,5 +1,5 @@
 // Packages.jsx
-import { Calendar, Plus } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import PackageCard from './PackageCard';
 import { packages } from '../data/packages';
 
@@ -51,21 +51,6 @@ const Packages = () => {
             </div>
           </div>
         )}
-
-        {/* CTA Section */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-purple-700 px-8 py-12 text-center">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2070')] opacity-10 bg-cover"></div>
-          <div className="relative">
-            <h3 className="mb-4 text-2xl font-bold text-white">Craft Your Perfect Getaway</h3>
-            <p className="mb-8 text-blue-100">
-              Tell us your dream, and we'll build the perfect itinerary just for you
-            </p>
-            <button className="inline-flex items-center justify-center space-x-2 rounded-full bg-white px-8 py-3 font-semibold text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <Plus className="h-5 w-5" />
-              <span>Design Custom Trip</span>
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );
