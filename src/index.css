@@ -1,102 +1,98 @@
 /* src/index.css */
+@import "tailwindcss";
 
-/* Import fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* Custom theme configurations for Tailwind v4 */
+@theme {
+  /* Font families */
+  --font-family-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-playfair: 'Playfair Display', serif;
+  
+  /* Animation keyframes */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  /* Animation utilities */
+  --animation-float: float 3s ease-in-out infinite;
+  --animation-fade-in: fadeIn 0.5s ease-in;
+  --animation-bounce: bounce 1s infinite;
+}
 
-/* Custom base styles */
+/* Custom CSS variables */
+:root {
+  /* Font families as CSS variables */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+  
+  /* Custom colors if needed */
+  --color-primary: #3b82f6;
+  --color-secondary: #10b981;
+  --color-accent: #8b5cf6;
+}
+
+/* Base styles */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
+/* Custom utility classes */
+.font-inter {
+  font-family: var(--font-inter);
 }
 
-/* Custom component styles */
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-  transition: all 0.3s ease;
+.font-playfair {
+  font-family: var(--font-playfair);
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+/* Custom animations */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
-.btn-secondary {
-  border: 2px solid white;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in;
 }
 
-.btn-secondary:hover {
-  background: white;
-  color: #1f2937;
+.animate-bounce-custom {
+  animation: bounce 1s infinite;
 }
 
-.section-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-  .section-title {
-    font-size: 3rem;
-  }
-}
-
-.section-subtitle {
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin-bottom: 3rem;
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  transform: translateY(-0.5rem);
-}
-
-/* Line clamp utilities */
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.line-clamp-3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 /* Custom scrollbar */
@@ -115,4 +111,23 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: inherit;
+}
+
+/* Image optimizations */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
