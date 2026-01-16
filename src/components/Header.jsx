@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, X, Globe, Search, User } from 'lucide-react'
+import { Menu, X, Globe, Search, User, MapPin } from 'lucide-react'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -9,9 +9,10 @@ const Header = () => {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Destinations', href: '#destinations' },
-    { label: 'Packages', href: '#packages' },
-    { label: 'About', href: '#about' },
+    { label: 'Indian Tours', href: '#packages' },
+    { label: 'About India', href: '#about' },
     { label: 'Contact', href: '#contact' },
+    { label: 'Visa Info', href: '#visa' },
   ]
 
   // Handle scroll effect for transparency
@@ -55,24 +56,39 @@ const Header = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/90 backdrop-blur-md shadow-sm' 
+        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-saffron-100' 
         : 'bg-transparent backdrop-blur-0'
     }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Globe className={`h-8 w-8 transition-colors duration-300 ${
-              isScrolled ? 'text-blue-600' : 'text-white'
-            }`} />
-            <span className="text-2xl font-bold text-gray-900">
-  Wanderlust
-  <span className="text-blue-600">.</span>
-</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="relative">
+              <Globe className={`h-8 w-8 transition-colors duration-300 ${
+                isScrolled ? 'text-saffron-500' : 'text-white'
+              }`} />
+              <MapPin className="absolute -bottom-1 -right-1 h-4 w-4 text-green-500 fill-current" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900 leading-tight">
+                trip.trekindia
+              </span>
+              <span className="text-xs font-medium text-gray-600">Explore Incredible India</span>
+            </div>
           </Link>
 
+          {/* Delhi Location Badge */}
+          <div className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
+            isScrolled 
+              ? 'bg-saffron-50 text-gray-800' 
+              : 'bg-white/20 text-white backdrop-blur-sm'
+          }`}>
+            <MapPin className="h-4 w-4" />
+            <span className="font-medium text-sm">Based in Delhi, India</span>
+          </div>
+
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6">
             {navItems.map((item) => (
               item.href.startsWith('#') ? (
                 <a
@@ -81,13 +97,13 @@ const Header = () => {
                   onClick={(e) => handleHashClick(item.href, e)}
                   className={`font-medium transition-all duration-300 relative group ${
                     isScrolled 
-                      ? 'text-gray-700 hover:text-blue-600' 
+                      ? 'text-gray-700 hover:text-saffron-600' 
                       : 'text-white/90 hover:text-white'
                   }`}
                 >
                   {item.label}
                   <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                    isScrolled ? 'bg-blue-600' : 'bg-white'
+                    isScrolled ? 'bg-saffron-500' : 'bg-white'
                   }`}></span>
                 </a>
               ) : (
@@ -97,13 +113,13 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`font-medium transition-all duration-300 relative group ${
                     isScrolled 
-                      ? 'text-gray-700 hover:text-blue-600' 
+                      ? 'text-gray-700 hover:text-saffron-600' 
                       : 'text-white/90 hover:text-white'
                   }`}
                 >
                   {item.label}
                   <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                    isScrolled ? 'bg-blue-600' : 'bg-white'
+                    isScrolled ? 'bg-saffron-500' : 'bg-white'
                   }`}></span>
                 </Link>
               )
@@ -113,22 +129,22 @@ const Header = () => {
           {/* Right side buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <button className={`p-2 transition-colors duration-300 ${
-              isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white/90 hover:text-white'
+              isScrolled ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white'
             }`}>
               <Search className="h-5 w-5" />
             </button>
             <button className={`p-2 transition-colors duration-300 ${
-              isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white/90 hover:text-white'
+              isScrolled ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white'
             }`}>
               <User className="h-5 w-5" />
             </button>
             <Link to="#packages" onClick={(e) => handleHashClick('#packages', e)}>
-              <button className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+              <button className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg ${
                 isScrolled 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                  ? 'bg-gradient-to-r from-saffron-500 to-saffron-600 text-white hover:from-saffron-600 hover:to-saffron-700' 
                   : 'bg-white text-gray-900 hover:bg-gray-100'
               }`}>
-                Book Now
+                Book Indian Tour
               </button>
             </Link>
           </div>
@@ -146,15 +162,21 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white border-t py-4">
-            <div className="flex flex-col space-y-4">
+          <div className="lg:hidden bg-white border-t border-gray-100 py-4 shadow-lg">
+            {/* Mobile Location Badge */}
+            <div className="flex items-center justify-center space-x-2 px-4 py-3 mb-4 bg-saffron-50 rounded-lg mx-4">
+              <MapPin className="h-4 w-4 text-saffron-600" />
+              <span className="font-medium text-sm text-gray-800">Based in Delhi, India</span>
+            </div>
+            
+            <div className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 item.href.startsWith('#') ? (
                   <a
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleHashClick(item.href, e)}
-                    className="text-gray-700 hover:text-blue-600 px-4 py-2 font-medium"
+                    className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
                   >
                     {item.label}
                   </a>
@@ -163,7 +185,7 @@ const Header = () => {
                     key={item.label}
                     to={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-700 hover:text-blue-600 px-4 py-2 font-medium"
+                    className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
                   >
                     {item.label}
                   </Link>
@@ -174,8 +196,8 @@ const Header = () => {
                   handleHashClick('#packages', e)
                   setIsMenuOpen(false)
                 }}>
-                  <button className="w-full px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors duration-300">
-                    Book Now
+                  <button className="w-full px-6 py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white rounded-full font-medium hover:from-saffron-600 hover:to-saffron-700 transition-all duration-300 shadow-md">
+                    Book Indian Tour
                   </button>
                 </Link>
               </div>
