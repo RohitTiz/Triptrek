@@ -1,10 +1,71 @@
 import { X, Mail, User as UserIcon, Lock, Globe, Facebook, Instagram, Twitter, Github } from 'lucide-react'
 import { useState } from 'react'
+import axios from 'axios'
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   if (!isOpen) return null
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+    setError('') // Clear error on input change
+  }
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
+      const payload = isLogin 
+        ? { email: formData.email, password: formData.password }
+        : { name: formData.name, email: formData.email, password: formData.password }
+
+      // Update this URL with your backend URL
+      const response = await axios.post(`http://localhost:5000${endpoint}`, payload, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.data.success) {
+        setSuccess(isLogin ? 'Login successful!' : 'Registration successful!')
+        
+        // Save token to localStorage
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        
+        // Close modal after 2 seconds
+        setTimeout(() => {
+          onClose()
+          window.location.reload() // Refresh to update auth state
+        }, 2000)
+      }
+    } catch (error) {
+      setError(
+        error.response?.data?.message || 
+        (isLogin ? 'Login failed. Please try again.' : 'Registration failed. Please try again.')
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -39,6 +100,18 @@ const LoginModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="px-6 py-5">
+          {/* Error/Success Messages */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm">
+              {success}
+            </div>
+          )}
+
           {/* Google Button - Primary */}
           <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 mb-4">
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -77,7 +150,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Full Name</label>
@@ -85,7 +158,11 @@ const LoginModal = ({ isOpen, onClose }) => {
                   <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="John Doe"
+                    required
                     className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -98,7 +175,11 @@ const LoginModal = ({ isOpen, onClose }) => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="you@example.com"
+                  required
                   className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -110,7 +191,12 @@ const LoginModal = ({ isOpen, onClose }) => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="••••••••"
+                  required
+                  minLength="6"
                   className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -130,9 +216,10 @@ const LoginModal = ({ isOpen, onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white font-medium rounded-lg hover:from-saffron-600 hover:to-saffron-700 transition-all shadow"
+              disabled={loading}
+              className="w-full py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white font-medium rounded-lg hover:from-saffron-600 hover:to-saffron-700 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
@@ -142,7 +229,11 @@ const LoginModal = ({ isOpen, onClose }) => {
               {isLogin ? "Don't have an account?" : "Already have an account?"}
             </span>
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin)
+                setError('')
+                setSuccess('')
+              }}
               className="ml-1 text-saffron-600 hover:text-saffron-700 font-medium"
             >
               {isLogin ? 'Sign up' : 'Sign in'}

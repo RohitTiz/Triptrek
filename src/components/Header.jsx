@@ -1,169 +1,170 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, X, Globe, Search, User, MapPin } from 'lucide-react'
-import LoginModal from './LoginModal'
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, Globe, Search, User, MapPin } from 'lucide-react';
+import LoginModal from './LoginModal';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Destinations', href: '#destinations' },
-    { label: 'Indian Tours', href: '#packages' },
-    { label: 'About India', href: '#about' },
-    { label: 'Contact', href: '#contact' },
-    { label: 'Visa Info', href: '#visa' },
-  ]
+    { label: 'Destinations', href: '/#destinations' },
+    { label: 'Indian Tours', href: '/#packages' },
+    { label: 'About India', href: '/#about' },
+    { label: 'Blogs', href: '/blogs' },
+    { label: 'Contact', href: '/#contact' },
+  ];
 
   // Handle scroll effect for transparency
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
-        setIsScrolled(true)
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll);
     
     // Initial check
-    handleScroll()
+    handleScroll();
     
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
-  // Function to handle hash navigation
-  const handleHashClick = (href, e) => {
-    if (href.startsWith('#')) {
-      e.preventDefault()
-      if (window.location.pathname !== '/') {
-        // If not on homepage, navigate to homepage with hash
-        window.location.href = `/${href}`
-      } else {
-        // If on homepage, scroll to section
-        const element = document.querySelector(href)
+  // Function to handle navigation
+  const handleNavClick = (href, e) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    
+    if (href === '/') {
+      navigate('/');
+      window.scrollTo(0, 0);
+    } else if (href.startsWith('/#')) {
+      // This is a hash link to homepage sections
+      const hash = href.split('#')[1];
+      
+      if (location.pathname === '/') {
+        // Already on homepage, scroll to section
+        const element = document.getElementById(hash);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' })
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
         }
+      } else {
+        // Not on homepage, navigate to homepage with hash
+        navigate(`/#${hash}`);
       }
-      setIsMenuOpen(false)
+    } else {
+      // Regular page navigation
+      navigate(href);
     }
-  }
+  };
 
   // Function to handle User icon click
   const handleUserClick = () => {
-    setIsLoginModalOpen(true)
-    setIsMenuOpen(false) // Close mobile menu if open
-  }
+    setIsLoginModalOpen(true);
+    setIsMenuOpen(false);
+  };
+
+  // Function to handle Book Tour button
+  const handleBookTour = (e) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    
+    if (location.pathname === '/') {
+      const element = document.getElementById('packages');
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      navigate('/#packages');
+    }
+  };
 
   // Close modal when pressing Escape key
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
-        setIsLoginModalOpen(false)
+        setIsLoginModalOpen(false);
       }
-    }
+    };
 
     if (isLoginModalOpen) {
-      document.addEventListener('keydown', handleEscape)
+      document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [isLoginModalOpen])
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isLoginModalOpen]);
+
+  // Determine if we're on homepage
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled 
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled || !isHomePage
           ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-saffron-100' 
           : 'bg-transparent backdrop-blur-0'
       }`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Updated Logo with high visibility */}
-            <Link to="/" className="flex items-center space-x-3">
+            {/* Logo */}
+            <a 
+              href="/" 
+              onClick={(e) => handleNavClick('/', e)}
+              className="flex items-center space-x-3 cursor-pointer"
+            >
               <div className="relative">
-                {/* Logo Container with border for visibility */}
                 <div className={`relative flex items-center justify-center h-10 w-10 rounded-full border-2 ${
-                  isScrolled 
+                  isScrolled || !isHomePage
                     ? 'border-gray-900 bg-white' 
                     : 'border-white bg-white/10 backdrop-blur-sm'
                 }`}>
-                  {/* Globe Icon - Always visible */}
                   <Globe className="h-6 w-6 text-gray-900" />
-                  
-                  {/* Location Pin - Always visible */}
                   <div className="absolute -bottom-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-white border border-gray-900">
                     <MapPin className="h-3 w-3 text-green-600 fill-current" />
                   </div>
                 </div>
               </div>
               
-              {/* Text Logo - High Contrast Version */}
               <div className="flex flex-col">
                 <div className="relative">
-                  {/* Text with shadow for better visibility */}
                   <span className={`text-xl font-bold leading-tight ${
-                    isScrolled 
+                    isScrolled || !isHomePage
                       ? 'text-gray-900 drop-shadow-sm' 
                       : 'text-white drop-shadow-lg'
                   }`}>
                     trip.trekindia
                   </span>
-                  {/* Optional: Add a subtle text stroke for extra visibility */}
-                  <span className={`absolute top-0 left-0 text-xl font-bold leading-tight ${
-                    isScrolled 
-                      ? 'text-transparent [text-shadow:1px_1px_0_#000, -1px_-1px_0_#000, 1px_-1px_0_#000, -1px_1px_0_#000]' 
-                      : 'text-transparent [text-shadow:1px_1px_0_#000, -1px_-1px_0_#000, 1px_-1px_0_#000, -1px_1px_0_#000]'
-                  }`}>
-                    trip.trekindia
-                  </span>
                 </div>
                 <span className={`text-xs font-medium ${
-                  isScrolled 
+                  isScrolled || !isHomePage
                     ? 'text-gray-600' 
                     : 'text-white/90 drop-shadow-md'
                 }`}>
                   Explore Incredible India
                 </span>
               </div>
-            </Link>
-
-            {/* Alternative: Simplified Logo with solid background */}
-            {/* Uncomment this version if you want a more solid logo */}
-            {/* 
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-white border-2 border-gray-900 shadow-md">
-                  <Globe className="h-6 w-6 text-gray-900" />
-                  <div className="absolute -bottom-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-white border-2 border-gray-900">
-                    <MapPin className="h-3 w-3 text-green-600 fill-current" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="relative">
-                  <span className="text-xl font-bold text-gray-900 bg-white px-2 py-0.5 rounded shadow-sm leading-tight">
-                    trip.trekindia
-                  </span>
-                </div>
-                <span className="text-xs font-medium text-gray-600 bg-white/90 px-2 py-0.5 rounded mt-0.5">
-                  Explore Incredible India
-                </span>
-              </div>
-            </Link>
-            */}
+            </a>
 
             {/* Delhi Location Badge */}
             <div className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
-              isScrolled 
+              isScrolled || !isHomePage
                 ? 'bg-saffron-50 text-gray-800' 
                 : 'bg-white/90 text-gray-900 backdrop-blur-sm'
             }`}>
@@ -174,72 +175,55 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-6">
               {navItems.map((item) => (
-                item.href.startsWith('#') ? (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    onClick={(e) => handleHashClick(item.href, e)}
-                    className={`font-medium transition-all duration-300 relative group ${
-                      isScrolled 
-                        ? 'text-gray-700 hover:text-saffron-600' 
-                        : 'text-white/90 hover:text-white drop-shadow-md'
-                    }`}
-                  >
-                    {item.label}
-                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                      isScrolled ? 'bg-saffron-500' : 'bg-white'
-                    }`}></span>
-                  </a>
-                ) : (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`font-medium transition-all duration-300 relative group ${
-                      isScrolled 
-                        ? 'text-gray-700 hover:text-saffron-600' 
-                        : 'text-white/90 hover:text-white drop-shadow-md'
-                    }`}
-                  >
-                    {item.label}
-                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                      isScrolled ? 'bg-saffron-500' : 'bg-white'
-                    }`}></span>
-                  </Link>
-                )
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(item.href, e)}
+                  className={`font-medium transition-all duration-300 relative group ${
+                    isScrolled || !isHomePage
+                      ? 'text-gray-700 hover:text-saffron-600' 
+                      : 'text-white/90 hover:text-white drop-shadow-md'
+                  }`}
+                >
+                  {item.label}
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                    isScrolled || !isHomePage ? 'bg-saffron-500' : 'bg-white'
+                  }`}></span>
+                </a>
               ))}
             </nav>
 
             {/* Right side buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <button className={`p-2 transition-colors duration-300 ${
-                isScrolled ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white drop-shadow-md'
+                isScrolled || !isHomePage ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white drop-shadow-md'
               }`}>
                 <Search className="h-5 w-5" />
               </button>
               <button 
                 onClick={handleUserClick}
                 className={`p-2 transition-colors duration-300 ${
-                  isScrolled ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white drop-shadow-md'
+                  isScrolled || !isHomePage ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white drop-shadow-md'
                 }`}
               >
                 <User className="h-5 w-5" />
               </button>
-              <Link to="#packages" onClick={(e) => handleHashClick('#packages', e)}>
-                <button className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg ${
-                  isScrolled 
+              <button 
+                onClick={handleBookTour}
+                className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg ${
+                  isScrolled || !isHomePage
                     ? 'bg-gradient-to-r from-saffron-500 to-saffron-600 text-white hover:from-saffron-600 hover:to-saffron-700' 
                     : 'bg-white text-gray-900 hover:bg-gray-100 drop-shadow-lg'
-                }`}>
-                  Book Indian Tour
-                </button>
-              </Link>
+                }`}
+              >
+                Book Indian Tour
+              </button>
             </div>
 
             {/* Mobile menu button */}
             <button
               className={`lg:hidden p-2 transition-colors duration-300 ${
-                isScrolled ? 'text-gray-600' : 'text-white drop-shadow-md'
+                isScrolled || !isHomePage ? 'text-gray-600' : 'text-white drop-shadow-md'
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -258,25 +242,14 @@ const Header = () => {
               
               <div className="flex flex-col space-y-1">
                 {navItems.map((item) => (
-                  item.href.startsWith('#') ? (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      onClick={(e) => handleHashClick(item.href, e)}
-                      className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
-                    >
-                      {item.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={item.label}
-                      to={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
-                    >
-                      {item.label}
-                    </Link>
-                  )
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(item.href, e)}
+                    className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
+                  >
+                    {item.label}
+                  </a>
                 ))}
                 <div className="px-4 pt-4 space-y-3">
                   <button 
@@ -286,14 +259,12 @@ const Header = () => {
                     <User className="h-5 w-5 mr-2" />
                     Sign In / Sign Up
                   </button>
-                  <Link to="#packages" onClick={(e) => {
-                    handleHashClick('#packages', e)
-                    setIsMenuOpen(false)
-                  }}>
-                    <button className="w-full px-6 py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white rounded-full font-medium hover:from-saffron-600 hover:to-saffron-700 transition-all duration-300 shadow-md">
-                      Book Indian Tour
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={handleBookTour}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white rounded-full font-medium hover:from-saffron-600 hover:to-saffron-700 transition-all duration-300 shadow-md"
+                  >
+                    Book Indian Tour
+                  </button>
                 </div>
               </div>
             </div>
@@ -307,7 +278,7 @@ const Header = () => {
         onClose={() => setIsLoginModalOpen(false)} 
       />
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
