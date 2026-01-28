@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, Search, User, MapPin } from 'lucide-react';
+import { Menu, X, Globe, Search, User, MapPin, LogOut, Settings } from 'lucide-react';
 import LoginModal from './LoginModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,6 +20,31 @@ const Header = () => {
     { label: 'Blogs', href: '/blogs' },
     { label: 'Contact', href: '/#contact' },
   ];
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkUserLogin = () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setCurrentUser(JSON.parse(savedUser));
+      } else {
+        setCurrentUser(null);
+      }
+    };
+
+    checkUserLogin();
+    
+    // Listen for storage changes (for login/logout from other tabs)
+    window.addEventListener('storage', checkUserLogin);
+    
+    // Check on page load
+    window.addEventListener('load', checkUserLogin);
+    
+    return () => {
+      window.removeEventListener('storage', checkUserLogin);
+      window.removeEventListener('load', checkUserLogin);
+    };
+  }, []);
 
   // Handle scroll effect
   useEffect(() => {
@@ -39,10 +66,25 @@ const Header = () => {
     };
   }, []);
 
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showUserDropdown && !event.target.closest('.user-dropdown-container')) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showUserDropdown]);
+
   // Function to handle navigation
   const handleNavClick = (href, e) => {
     e.preventDefault();
     setIsMenuOpen(false);
+    setShowUserDropdown(false);
     
     if (href === '/') {
       navigate('/');
@@ -72,7 +114,11 @@ const Header = () => {
 
   // Function to handle User icon click
   const handleUserClick = () => {
-    setIsLoginModalOpen(true);
+    if (currentUser) {
+      setShowUserDropdown(!showUserDropdown);
+    } else {
+      setIsLoginModalOpen(true);
+    }
     setIsMenuOpen(false);
   };
 
@@ -80,6 +126,7 @@ const Header = () => {
   const handleBookTour = (e) => {
     e.preventDefault();
     setIsMenuOpen(false);
+    setShowUserDropdown(false);
     
     if (location.pathname === '/') {
       const element = document.getElementById('packages');
@@ -94,22 +141,31 @@ const Header = () => {
     }
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setCurrentUser(null);
+    setShowUserDropdown(false);
+    setIsMenuOpen(false);
+    navigate('/');
+    window.location.reload();
+  };
+
   // Close modal when pressing Escape key
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         setIsLoginModalOpen(false);
+        setShowUserDropdown(false);
       }
     };
 
-    if (isLoginModalOpen) {
-      document.addEventListener('keydown', handleEscape);
-    }
-
+    document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isLoginModalOpen]);
+  }, [isLoginModalOpen, showUserDropdown]);
 
   // Determine if we're on homepage
   const isHomePage = location.pathname === '/';
@@ -200,12 +256,82 @@ const Header = () => {
                   <button className={`p-2 transition-colors duration-300 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-green-600`}>
                     <Search className="h-5 w-5" />
                   </button>
-                  <button 
-                    onClick={handleUserClick}
-                    className={`p-2 transition-colors duration-300 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-green-600`}
-                  >
-                    <User className="h-5 w-5" />
-                  </button>
+                  
+                  {/* User Profile Button with Dropdown */}
+                  <div className="user-dropdown-container relative">
+                    <button 
+                      onClick={handleUserClick}
+                      className={`p-2 transition-colors duration-300 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-green-600 flex items-center gap-2 ${
+                        currentUser ? 'bg-gray-50' : ''
+                      }`}
+                    >
+                      <User className="h-5 w-5" />
+                      {currentUser && (
+                        <span className="text-sm font-medium hidden xl:inline">
+                          Hi, {currentUser.name?.split(' ')[0] || 'User'}
+                        </span>
+                      )}
+                    </button>
+                    
+                    {/* User Dropdown Menu */}
+                    {showUserDropdown && currentUser && (
+                      <div className="absolute right-0 mt-2 w-56 rounded-xl border border-gray-200 bg-white/95 backdrop-blur-lg py-2 shadow-xl z-50">
+                        <div className="px-4 py-3 border-b border-gray-100">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-saffron-400 to-green-500 text-white font-bold">
+                              {currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U'}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">{currentUser.name || 'User'}</p>
+                              <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="py-1">
+                          <a 
+                            href="/profile" 
+                            onClick={(e) => handleNavClick('/profile', e)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >
+                            <User className="h-4 w-4" />
+                            My Profile
+                          </a>
+                          
+                          <a 
+                            href="/bookings" 
+                            onClick={(e) => handleNavClick('/bookings', e)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            My Bookings
+                          </a>
+                          
+                          <a 
+                            href="/settings" 
+                            onClick={(e) => handleNavClick('/settings', e)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >
+                            <Settings className="h-4 w-4" />
+                            Settings
+                          </a>
+                        </div>
+                        
+                        <div className="border-t border-gray-100 py-1">
+                          <button
+                            onClick={handleLogout}
+                            className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
                   <button 
                     onClick={handleBookTour}
                     className={`rounded-full px-5 py-2.5 font-medium shadow-lg transition-all duration-300 lg:px-6 ${
@@ -248,14 +374,58 @@ const Header = () => {
                       {item.label}
                     </a>
                   ))}
-                  <div className="space-y-3 px-4 pt-4">
-                    <button 
-                      onClick={handleUserClick}
-                      className="flex w-full items-center justify-center rounded-full border border-gray-200 bg-white px-6 py-3 font-medium text-gray-800 transition-all duration-300 hover:bg-gray-100 shadow-sm"
-                    >
-                      <User className="mr-2 h-5 w-5" />
-                      Sign In / Sign Up
-                    </button>
+                  
+                  {/* User info in mobile menu */}
+                  {currentUser && (
+                    <div className="mx-4 mb-3 px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-saffron-400 to-green-500 text-white font-bold">
+                          {currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U'}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{currentUser.name || 'User'}</p>
+                          <p className="text-xs text-gray-500">{currentUser.email}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <a 
+                          href="/profile" 
+                          onClick={(e) => handleNavClick('/profile', e)}
+                          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 border border-gray-300 hover:bg-gray-100"
+                        >
+                          Profile
+                        </a>
+                        <a 
+                          href="/bookings" 
+                          onClick={(e) => handleNavClick('/bookings', e)}
+                          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-medium text-gray-700 border border-gray-300 hover:bg-gray-100"
+                        >
+                          Bookings
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="space-y-3 px-4 pt-2">
+                    {!currentUser ? (
+                      <button 
+                        onClick={handleUserClick}
+                        className="flex w-full items-center justify-center rounded-full border border-gray-200 bg-white px-6 py-3 font-medium text-gray-800 transition-all duration-300 hover:bg-gray-100 shadow-sm"
+                      >
+                        <User className="mr-2 h-5 w-5" />
+                        Sign In / Sign Up
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={handleLogout}
+                        className="flex w-full items-center justify-center rounded-full border border-red-200 bg-white px-6 py-3 font-medium text-red-600 transition-all duration-300 hover:bg-red-50 shadow-sm"
+                      >
+                        <LogOut className="mr-2 h-5 w-5" />
+                        Logout
+                      </button>
+                    )}
+                    
                     <button 
                       onClick={handleBookTour}
                       className="w-full rounded-full bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 font-medium text-white shadow-lg transition-all duration-300 hover:from-green-700 hover:to-green-800"

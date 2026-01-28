@@ -6,6 +6,8 @@ import BlogPostPage from './pages/BlogPostPage'
 import DestinationDetail from './pages/DestinationDetail'
 import PackageDetail from './pages/PackageDetail'
 import Payment from './pages/Payment'
+import AuthCallback from './components/AuthCallback'
+import ProfilePage from './pages/ProfilePage'  // ADD THIS
 
 function App() {
   return (
@@ -46,6 +48,13 @@ function App() {
             <BlogPostPage />
           </Layout>
         } />
+        {/* ADD PROFILE ROUTE */}
+        <Route path="/profile" element={
+          <Layout>
+            <ProfilePage />
+          </Layout>
+        } />
+        <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
     </Router>
   )
