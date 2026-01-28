@@ -26,8 +26,9 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   // Handle Google Login
   const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth endpoint
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    // ✅ CHANGED: Added API_URL variable
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    window.location.href = `${API_URL}/api/auth/google`;
   }
 
   // Handle form submission
@@ -43,7 +44,9 @@ const LoginModal = ({ isOpen, onClose }) => {
         ? { email: formData.email, password: formData.password }
         : { name: formData.name, email: formData.email, password: formData.password }
 
-      const response = await axios.post(`http://localhost:5000${endpoint}`, payload, {
+      // ✅ CHANGED: Added API_URL variable
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await axios.post(`${API_URL}${endpoint}`, payload, {
         headers: {
           'Content-Type': 'application/json'
         }
