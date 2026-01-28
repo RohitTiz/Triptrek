@@ -1,5 +1,5 @@
 import { X, Mail, User as UserIcon, Lock, Globe, Facebook, Instagram, Twitter, Github } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const LoginModal = ({ isOpen, onClose }) => {
@@ -13,6 +13,15 @@ const LoginModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
+  // Reset form when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({ name: '', email: '', password: '' })
+      setError('')
+      setSuccess('')
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   // Handle form input changes
@@ -22,12 +31,13 @@ const LoginModal = ({ isOpen, onClose }) => {
       [e.target.name]: e.target.value
     })
     setError('') // Clear error on input change
+    setSuccess('') // Clear success on input change
   }
 
   // Handle Google Login
   const handleGoogleLogin = () => {
-    // ✅ CHANGED: Added API_URL variable
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    // Hardcode backend URL for now
+    const API_URL = 'https://triptrek-xpgq.onrender.com'
     window.location.href = `${API_URL}/api/auth/google`;
   }
 
@@ -44,20 +54,30 @@ const LoginModal = ({ isOpen, onClose }) => {
         ? { email: formData.email, password: formData.password }
         : { name: formData.name, email: formData.email, password: formData.password }
 
-      // ✅ CHANGED: Added API_URL variable
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      // Hardcode backend URL - FIX FOR NOW
+      const API_URL = 'https://triptrek-xpgq.onrender.com'
+      
+      console.log('Sending request to:', `${API_URL}${endpoint}`)
+      console.log('Payload:', payload)
+
       const response = await axios.post(`${API_URL}${endpoint}`, payload, {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 10000 // 10 second timeout
       })
 
+      console.log('Response received:', response.data)
+
       if (response.data.success) {
-        setSuccess(isLogin ? 'Login successful!' : 'Registration successful!')
+        const message = isLogin ? 'Login successful!' : 'Registration successful!'
+        setSuccess(message)
         
         // Save token to localStorage
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))
+        
+        console.log('User data saved to localStorage')
         
         // Close modal after 2 seconds
         setTimeout(() => {
@@ -66,10 +86,24 @@ const LoginModal = ({ isOpen, onClose }) => {
         }, 2000)
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || 
-        (isLogin ? 'Login failed. Please try again.' : 'Registration failed. Please try again.')
-      )
+      console.error('Full error:', error)
+      console.error('Error response:', error.response)
+      
+      let errorMessage = ''
+      
+      if (error.response) {
+        // Server responded with error
+        errorMessage = error.response.data?.message || 
+          (isLogin ? 'Login failed. Please check your credentials.' : 'Registration failed. Please try again.')
+      } else if (error.request) {
+        // Request was made but no response
+        errorMessage = 'Server is not responding. Please check your internet connection.'
+      } else {
+        // Something else happened
+        errorMessage = 'An error occurred. Please try again.'
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -102,6 +136,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           <button
             onClick={onClose}
             className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            aria-label="Close modal"
           >
             <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
@@ -110,12 +145,13 @@ const LoginModal = ({ isOpen, onClose }) => {
         <div className="px-4 py-4 sm:px-6 sm:py-5">
           {/* Error/Success Messages */}
           {error && (
-            <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs text-red-600 sm:mb-4 sm:p-3 sm:text-sm">
+            <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs text-red-600 sm:mb-4 sm:p-3 sm:text-sm animate-fade-in">
               {error}
             </div>
           )}
+          
           {success && (
-            <div className="mb-3 rounded-lg border border-green-200 bg-green-50 p-2.5 text-xs text-green-600 sm:mb-4 sm:p-3 sm:text-sm">
+            <div className="mb-3 rounded-lg border border-green-200 bg-green-50 p-2.5 text-xs text-green-600 sm:mb-4 sm:p-3 sm:text-sm animate-fade-in">
               {success}
             </div>
           )}
@@ -124,6 +160,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           <button 
             onClick={handleGoogleLogin}
             className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 sm:mb-4 sm:gap-3 sm:px-4 sm:py-3 sm:text-base"
+            disabled={loading}
           >
             <svg className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -136,16 +173,28 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           {/* Social Grid - Compact */}
           <div className="mb-3 grid grid-cols-4 gap-1.5 sm:mb-4 sm:gap-2">
-            <button className="flex items-center justify-center rounded-lg bg-blue-50 p-2 text-blue-600 transition-colors hover:bg-blue-100 sm:p-2.5">
+            <button 
+              className="flex items-center justify-center rounded-lg bg-blue-50 p-2 text-blue-600 transition-colors hover:bg-blue-100 sm:p-2.5"
+              aria-label="Login with Facebook"
+            >
               <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="flex items-center justify-center rounded-lg bg-pink-50 p-2 text-pink-600 transition-colors hover:bg-pink-100 sm:p-2.5">
+            <button 
+              className="flex items-center justify-center rounded-lg bg-pink-50 p-2 text-pink-600 transition-colors hover:bg-pink-100 sm:p-2.5"
+              aria-label="Login with Instagram"
+            >
               <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="flex items-center justify-center rounded-lg bg-sky-50 p-2 text-sky-600 transition-colors hover:bg-sky-100 sm:p-2.5">
+            <button 
+              className="flex items-center justify-center rounded-lg bg-sky-50 p-2 text-sky-600 transition-colors hover:bg-sky-100 sm:p-2.5"
+              aria-label="Login with Twitter"
+            >
               <Twitter className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="flex items-center justify-center rounded-lg bg-gray-800 p-2 text-white transition-colors hover:bg-gray-900 sm:p-2.5">
+            <button 
+              className="flex items-center justify-center rounded-lg bg-gray-800 p-2 text-white transition-colors hover:bg-gray-900 sm:p-2.5"
+              aria-label="Login with GitHub"
+            >
               <Github className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
@@ -174,7 +223,8 @@ const LoginModal = ({ isOpen, onClose }) => {
                     onChange={handleChange}
                     placeholder="John Doe"
                     required
-                    className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
+                    disabled={loading}
+                    className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 disabled:bg-gray-100 disabled:cursor-not-allowed sm:py-2.5 sm:pl-10 sm:pr-4"
                   />
                 </div>
               </div>
@@ -191,7 +241,8 @@ const LoginModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   placeholder="you@example.com"
                   required
-                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
+                  disabled={loading}
+                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 disabled:bg-gray-100 disabled:cursor-not-allowed sm:py-2.5 sm:pl-10 sm:pr-4"
                 />
               </div>
             </div>
@@ -208,7 +259,8 @@ const LoginModal = ({ isOpen, onClose }) => {
                   placeholder="••••••••"
                   required
                   minLength="6"
-                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
+                  disabled={loading}
+                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 disabled:bg-gray-100 disabled:cursor-not-allowed sm:py-2.5 sm:pl-10 sm:pr-4"
                 />
               </div>
             </div>
@@ -216,10 +268,18 @@ const LoginModal = ({ isOpen, onClose }) => {
             {isLogin && (
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <label className="flex items-center gap-1.5">
-                  <input type="checkbox" className="h-3.5 w-3.5 rounded border-gray-300 text-saffron-600 focus:ring-saffron-500 sm:h-4 sm:w-4" />
+                  <input 
+                    type="checkbox" 
+                    className="h-3.5 w-3.5 rounded border-gray-300 text-saffron-600 focus:ring-saffron-500 sm:h-4 sm:w-4" 
+                    disabled={loading}
+                  />
                   <span className="text-gray-600">Remember me</span>
                 </label>
-                <button type="button" className="font-medium text-saffron-600 hover:text-saffron-700">
+                <button 
+                  type="button" 
+                  className="font-medium text-saffron-600 hover:text-saffron-700 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
                   Forgot password?
                 </button>
               </div>
@@ -228,9 +288,19 @@ const LoginModal = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-gradient-to-r from-saffron-500 to-saffron-600 py-2.5 text-sm font-medium text-white shadow transition-all hover:from-saffron-600 hover:to-saffron-700 disabled:cursor-not-allowed disabled:opacity-50 sm:py-3 sm:text-base"
+              className="w-full rounded-lg bg-gradient-to-r from-saffron-500 to-saffron-600 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-saffron-600 hover:to-saffron-700 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:from-saffron-500 disabled:hover:to-saffron-600 disabled:hover:shadow-lg sm:py-3 sm:text-base"
             >
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                isLogin ? 'Sign In' : 'Create Account'
+              )}
             </button>
           </form>
 
@@ -244,8 +314,10 @@ const LoginModal = ({ isOpen, onClose }) => {
                 setIsLogin(!isLogin)
                 setError('')
                 setSuccess('')
+                setFormData({ name: '', email: '', password: '' })
               }}
-              className="ml-1 font-medium text-saffron-600 hover:text-saffron-700"
+              className="ml-1 font-medium text-saffron-600 hover:text-saffron-700 disabled:text-gray-400 disabled:cursor-not-allowed"
+              disabled={loading}
             >
               {isLogin ? 'Sign up' : 'Sign in'}
             </button>
