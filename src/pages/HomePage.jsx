@@ -27,7 +27,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header REMOVED - Now handled by Layout */}
       <Hero />
       <section id="destinations">
         <Destinations />
@@ -39,20 +38,20 @@ const HomePage = () => {
         <Testimonials />
       </section>
       {/* Add missing sections for other hash links */}
-      <section id="about" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-8">About Incredible India</h2>
-          <p className="text-gray-600 text-lg max-w-3xl mx-auto text-center">
+      <section id="about" className="bg-gray-50 py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-center text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl lg:text-4xl">About Incredible India</h2>
+          <p className="mx-auto max-w-3xl text-center text-sm text-gray-600 sm:text-base lg:text-lg">
             India is a land of ancient traditions, vibrant culture, and breathtaking landscapes. 
             From the snow-capped Himalayas to the sun-kissed beaches of Goa, experience the diversity 
             that makes India truly incredible.
           </p>
         </div>
       </section>
-      <section id="contact" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-8">Contact Us</h2>
-          <p className="text-gray-600 text-lg max-w-3xl mx-auto text-center">
+      <section id="contact" className="bg-white py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-center text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl lg:text-4xl">Contact Us</h2>
+          <p className="mx-auto max-w-3xl text-center text-sm text-gray-600 sm:text-base lg:text-lg">
             Have questions? We're here to help you plan your perfect Indian adventure.
           </p>
         </div>

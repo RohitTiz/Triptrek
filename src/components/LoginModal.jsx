@@ -68,22 +68,22 @@ const LoginModal = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
       
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-sm rounded-2xl bg-white shadow-2xl sm:max-w-md">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
+        <div className="sticky top-0 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
-              <Globe className="h-8 w-8 text-saffron-500" />
-              <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 rounded-full border-2 border-white" />
+              <Globe className="h-6 w-6 text-saffron-500 sm:h-7 sm:w-7" />
+              <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white bg-green-500 sm:h-4 sm:w-4" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900">
+              <h2 className="text-sm font-bold text-gray-900 sm:text-base">
                 {isLogin ? 'Welcome Back' : 'Join Trip.trekindia'}
               </h2>
               <p className="text-xs text-gray-500">
@@ -93,28 +93,28 @@ const LoginModal = ({ isOpen, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 
-        <div className="px-6 py-5">
+        <div className="px-4 py-4 sm:px-6 sm:py-5">
           {/* Error/Success Messages */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+            <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs text-red-600 sm:mb-4 sm:p-3 sm:text-sm">
               {error}
             </div>
           )}
           {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm">
+            <div className="mb-3 rounded-lg border border-green-200 bg-green-50 p-2.5 text-xs text-green-600 sm:mb-4 sm:p-3 sm:text-sm">
               {success}
             </div>
           )}
 
           {/* Google Button - Primary */}
-          <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 mb-4">
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <button className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 sm:mb-4 sm:gap-3 sm:px-4 sm:py-3 sm:text-base">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -124,38 +124,38 @@ const LoginModal = ({ isOpen, onClose }) => {
           </button>
 
           {/* Social Grid - Compact */}
-          <div className="grid grid-cols-4 gap-2 mb-4">
-            <button className="p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors flex items-center justify-center">
-              <Facebook className="h-5 w-5" />
+          <div className="mb-3 grid grid-cols-4 gap-1.5 sm:mb-4 sm:gap-2">
+            <button className="flex items-center justify-center rounded-lg bg-blue-50 p-2 text-blue-600 transition-colors hover:bg-blue-100 sm:p-2.5">
+              <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="p-2.5 bg-pink-50 hover:bg-pink-100 text-pink-600 rounded-lg transition-colors flex items-center justify-center">
-              <Instagram className="h-5 w-5" />
+            <button className="flex items-center justify-center rounded-lg bg-pink-50 p-2 text-pink-600 transition-colors hover:bg-pink-100 sm:p-2.5">
+              <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="p-2.5 bg-sky-50 hover:bg-sky-100 text-sky-600 rounded-lg transition-colors flex items-center justify-center">
-              <Twitter className="h-5 w-5" />
+            <button className="flex items-center justify-center rounded-lg bg-sky-50 p-2 text-sky-600 transition-colors hover:bg-sky-100 sm:p-2.5">
+              <Twitter className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <button className="p-2.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors flex items-center justify-center">
-              <Github className="h-5 w-5" />
+            <button className="flex items-center justify-center rounded-lg bg-gray-800 p-2 text-white transition-colors hover:bg-gray-900 sm:p-2.5">
+              <Github className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
 
           {/* Divider */}
-          <div className="relative my-5">
+          <div className="relative my-3 sm:my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center">
-              <span className="px-3 bg-white text-sm text-gray-500">Or use email</span>
+              <span className="bg-white px-2 text-xs text-gray-500 sm:px-3 sm:text-sm">Or use email</span>
             </div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {!isLogin && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Full Name</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-gray-700 sm:text-sm">Full Name</label>
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <UserIcon className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 sm:h-4 sm:w-4" />
                   <input
                     type="text"
                     name="name"
@@ -163,16 +163,16 @@ const LoginModal = ({ isOpen, onClose }) => {
                     onChange={handleChange}
                     placeholder="John Doe"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
+                    className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
                   />
                 </div>
               </div>
             )}
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Email</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-gray-700 sm:text-sm">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 sm:h-4 sm:w-4" />
                 <input
                   type="email"
                   name="email"
@@ -180,15 +180,15 @@ const LoginModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   placeholder="you@example.com"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
+                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Password</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-gray-700 sm:text-sm">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 sm:h-4 sm:w-4" />
                 <input
                   type="password"
                   name="password"
@@ -197,18 +197,18 @@ const LoginModal = ({ isOpen, onClose }) => {
                   placeholder="••••••••"
                   required
                   minLength="6"
-                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-saffron-500 focus:border-transparent outline-none"
+                  className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-saffron-500 sm:py-2.5 sm:pl-10 sm:pr-4"
                 />
               </div>
             </div>
 
             {isLogin && (
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="h-4 w-4 text-saffron-600 rounded border-gray-300 focus:ring-saffron-500" />
+              <div className="flex items-center justify-between text-xs sm:text-sm">
+                <label className="flex items-center gap-1.5">
+                  <input type="checkbox" className="h-3.5 w-3.5 rounded border-gray-300 text-saffron-600 focus:ring-saffron-500 sm:h-4 sm:w-4" />
                   <span className="text-gray-600">Remember me</span>
                 </label>
-                <button type="button" className="text-saffron-600 hover:text-saffron-700 font-medium">
+                <button type="button" className="font-medium text-saffron-600 hover:text-saffron-700">
                   Forgot password?
                 </button>
               </div>
@@ -217,14 +217,14 @@ const LoginModal = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white font-medium rounded-lg hover:from-saffron-600 hover:to-saffron-700 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-gradient-to-r from-saffron-500 to-saffron-600 py-2.5 text-sm font-medium text-white shadow transition-all hover:from-saffron-600 hover:to-saffron-700 disabled:cursor-not-allowed disabled:opacity-50 sm:py-3 sm:text-base"
             >
               {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
           {/* Toggle */}
-          <div className="mt-6 text-center text-sm">
+          <div className="mt-4 text-center text-xs sm:mt-5 sm:text-sm">
             <span className="text-gray-600">
               {isLogin ? "Don't have an account?" : "Already have an account?"}
             </span>
@@ -234,7 +234,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                 setError('')
                 setSuccess('')
               }}
-              className="ml-1 text-saffron-600 hover:text-saffron-700 font-medium"
+              className="ml-1 font-medium text-saffron-600 hover:text-saffron-700"
             >
               {isLogin ? 'Sign up' : 'Sign in'}
             </button>
@@ -242,8 +242,8 @@ const LoginModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-          <p className="text-xs text-gray-500 text-center">
+        <div className="border-t border-gray-100 bg-gray-50 px-4 py-3 sm:px-6 sm:py-4">
+          <p className="text-center text-xs text-gray-500">
             By continuing, you agree to our Terms and Privacy Policy
           </p>
         </div>

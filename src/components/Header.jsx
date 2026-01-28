@@ -116,35 +116,35 @@ const Header = () => {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled || !isHomePage
           ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-saffron-100' 
           : 'bg-transparent backdrop-blur-0'
       }`}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex min-h-16 lg:min-h-20 items-center justify-between">
             {/* Logo */}
             <a 
               href="/" 
               onClick={(e) => handleNavClick('/', e)}
-              className="flex items-center space-x-3 cursor-pointer"
+              className="flex cursor-pointer items-center gap-2 sm:gap-3"
             >
               <div className="relative">
-                <div className={`relative flex items-center justify-center h-10 w-10 rounded-full border-2 ${
+                <div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 ${
                   isScrolled || !isHomePage
                     ? 'border-gray-900 bg-white' 
                     : 'border-white bg-white/10 backdrop-blur-sm'
                 }`}>
-                  <Globe className="h-6 w-6 text-gray-900" />
-                  <div className="absolute -bottom-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-white border border-gray-900">
-                    <MapPin className="h-3 w-3 text-green-600 fill-current" />
+                  <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-gray-900" />
+                  <div className="absolute -bottom-1 -right-1 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full border border-gray-900 bg-white">
+                    <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-green-600 fill-current" />
                   </div>
                 </div>
               </div>
               
-              <div className="flex flex-col">
+              <div className="flex flex-col leading-tight">
                 <div className="relative">
-                  <span className={`text-xl font-bold leading-tight ${
+                  <span className={`text-lg font-bold sm:text-xl ${
                     isScrolled || !isHomePage
                       ? 'text-gray-900 drop-shadow-sm' 
                       : 'text-white drop-shadow-lg'
@@ -163,30 +163,30 @@ const Header = () => {
             </a>
 
             {/* Delhi Location Badge */}
-            <div className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
+            <div className={`hidden items-center gap-2 rounded-full px-4 py-2 transition-all duration-300 lg:flex ${
               isScrolled || !isHomePage
                 ? 'bg-saffron-50 text-gray-800' 
                 : 'bg-white/90 text-gray-900 backdrop-blur-sm'
             }`}>
               <MapPin className="h-4 w-4" />
-              <span className="font-medium text-sm">Based in Delhi, India</span>
+              <span className="text-sm font-medium">Based in Delhi, India</span>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-6">
+            <nav className="hidden items-center gap-4 lg:flex lg:gap-6">
               {navItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleNavClick(item.href, e)}
-                  className={`font-medium transition-all duration-300 relative group ${
+                  className={`relative font-medium transition-all duration-300 group ${
                     isScrolled || !isHomePage
                       ? 'text-gray-700 hover:text-saffron-600' 
                       : 'text-white/90 hover:text-white drop-shadow-md'
                   }`}
                 >
                   {item.label}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  <span className={`absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full ${
                     isScrolled || !isHomePage ? 'bg-saffron-500' : 'bg-white'
                   }`}></span>
                 </a>
@@ -194,7 +194,7 @@ const Header = () => {
             </nav>
 
             {/* Right side buttons */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden items-center gap-3 lg:flex lg:gap-4">
               <button className={`p-2 transition-colors duration-300 ${
                 isScrolled || !isHomePage ? 'text-gray-600 hover:text-saffron-600' : 'text-white/90 hover:text-white drop-shadow-md'
               }`}>
@@ -210,7 +210,7 @@ const Header = () => {
               </button>
               <button 
                 onClick={handleBookTour}
-                className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg ${
+                className={`rounded-full px-5 py-2.5 font-medium shadow-lg transition-all duration-300 lg:px-6 ${
                   isScrolled || !isHomePage
                     ? 'bg-gradient-to-r from-saffron-500 to-saffron-600 text-white hover:from-saffron-600 hover:to-saffron-700' 
                     : 'bg-white text-gray-900 hover:bg-gray-100 drop-shadow-lg'
@@ -222,7 +222,7 @@ const Header = () => {
 
             {/* Mobile menu button */}
             <button
-              className={`lg:hidden p-2 transition-colors duration-300 ${
+              className={`p-2 transition-colors duration-300 lg:hidden ${
                 isScrolled || !isHomePage ? 'text-gray-600' : 'text-white drop-shadow-md'
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -233,35 +233,35 @@ const Header = () => {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="lg:hidden bg-white border-t border-gray-100 py-4 shadow-lg">
+            <div className="border-t border-gray-100 bg-white py-4 shadow-lg lg:hidden">
               {/* Mobile Location Badge */}
-              <div className="flex items-center justify-center space-x-2 px-4 py-3 mb-4 bg-saffron-50 rounded-lg mx-4">
+              <div className="mx-4 mb-4 flex items-center justify-center gap-2 rounded-lg bg-saffron-50 px-4 py-3">
                 <MapPin className="h-4 w-4 text-saffron-600" />
-                <span className="font-medium text-sm text-gray-800">Based in Delhi, India</span>
+                <span className="text-sm font-medium text-gray-800">Based in Delhi, India</span>
               </div>
               
-              <div className="flex flex-col space-y-1">
+              <div className="flex flex-col gap-1">
                 {navItems.map((item) => (
                   <a
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleNavClick(item.href, e)}
-                    className="text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 px-4 py-3 font-medium rounded-lg mx-2"
+                    className="mx-2 rounded-lg px-4 py-3 font-medium text-gray-700 hover:bg-saffron-50 hover:text-saffron-600"
                   >
                     {item.label}
                   </a>
                 ))}
-                <div className="px-4 pt-4 space-y-3">
+                <div className="space-y-3 px-4 pt-4">
                   <button 
                     onClick={handleUserClick}
-                    className="flex items-center justify-center w-full px-6 py-3 bg-gray-50 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-all duration-300 border border-gray-200"
+                    className="flex w-full items-center justify-center rounded-full border border-gray-200 bg-gray-50 px-6 py-3 font-medium text-gray-700 transition-all duration-300 hover:bg-gray-100"
                   >
-                    <User className="h-5 w-5 mr-2" />
+                    <User className="mr-2 h-5 w-5" />
                     Sign In / Sign Up
                   </button>
                   <button 
                     onClick={handleBookTour}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-saffron-500 to-saffron-600 text-white rounded-full font-medium hover:from-saffron-600 hover:to-saffron-700 transition-all duration-300 shadow-md"
+                    className="w-full rounded-full bg-gradient-to-r from-saffron-500 to-saffron-600 px-6 py-3 font-medium text-white shadow-md transition-all duration-300 hover:from-saffron-600 hover:to-saffron-700"
                   >
                     Book Indian Tour
                   </button>
